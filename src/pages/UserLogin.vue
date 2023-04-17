@@ -1,10 +1,10 @@
 <template>
     <div class="centerLogin">
 
-        <div class="createAccountModal">
+        <div v-if="createAccountModal.bool" class="createAccountModal">
             <div style="padding: 10px; display: flex; justify-content: space-between; background-color: black">
                 <div style="font-size: 17px; font-weight: bold">Create Account</div>
-                <fai icon="fa-solid fa-close" />
+                <fai icon="fa-solid fa-close" @click="createAccountModal.bool = false"/>
             </div>
             <div style="flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 10px">
                 <div class="inputGroup">
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div style="padding: 10px; display: flex; justify-content: end; background-color: black">
-                <button class="inputField">
+                <button class="inputField" @click="createAccountModal.bool = false">
                     Submit
                 </button>
             </div>
@@ -58,13 +58,13 @@
             <div class="loginFields">
                 <div class="inputGroup">
                     <div class="prependLabel">
-                        <fai icon="fa-solid fa-user" />
+                        <fai icon="fa-solid fa-user"/>
                     </div>
                     <input class="inputField"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
-                        <fai icon="fa-solid fa-lock" />
+                        <fai icon="fa-solid fa-lock"/>
                     </div>
                     <input class="inputField" type="password"/>
                 </div>
@@ -83,7 +83,7 @@
                     <div>or</div>
                     <div class="orDividerLines"/>
                 </div>
-                <button class="inputField">
+                <button class="inputField" @click="openCreateAccountModal()">
                     Create Account
                 </button>
             </div>
@@ -92,12 +92,34 @@
 </template>
 
 <script>
-import { RouterLink } from 'vue-router';
+import {RouterLink} from 'vue-router';
 
 export default {
     name: "UserLogin",
     components: {
         RouterLink
+    },
+    data() {
+        return {
+            createAccountModal: {
+                bool: false,
+                data: null,
+                template: {
+                    username: null,
+                    firstName: null,
+                    middleName: null,
+                    lastname: null,
+                    password: null,
+                },
+                confirmPassword: ""
+            }
+        }
+    },
+    methods: {
+        openCreateAccountModal() {
+            this.createAccountModal.data = Object.assign({}, this.createAccountModal.template);
+            this.createAccountModal.bool = true;
+        }
     }
 }
 </script>
@@ -111,6 +133,7 @@ export default {
     display: flex;
     flex-direction: column;
 }
+
 .centerLogin {
     height: 100%;
     width: 100%;
@@ -122,6 +145,7 @@ export default {
     gap: 20px;
     position: relative;
 }
+
 .blackBox {
     border-radius: 10px;
     display: flex;
@@ -131,6 +155,7 @@ export default {
     padding: 0 10px;
     border: black solid 3px;
 }
+
 .productName {
     display: flex;
     align-items: center;
@@ -139,6 +164,7 @@ export default {
     font-size: 50px;
     font-weight: 900;
 }
+
 .loginFields {
     display: flex;
     flex-direction: column;
@@ -146,10 +172,12 @@ export default {
     gap: 3px;
     margin: 10px 0;
 }
+
 .inputGroup {
     display: flex;
     justify-content: stretch;
 }
+
 .prependLabel {
     background-color: black;
     display: flex;
@@ -162,22 +190,27 @@ export default {
     font-size: 13px;
     word-break: initial;
 }
+
 .inputField {
     filter: invert(1);
 }
+
 .loginButtons {
     display: flex;
     width: 100%;
     justify-content: space-between;
 }
+
 .forgotPasswordText {
     font-size: 12px;
     color: #4e9acd;
 }
+
 .loginButton {
     color: inherit;
-   text-decoration: none;
+    text-decoration: none;
 }
+
 .orDivider {
     display: flex;
     justify-content: center;
@@ -185,6 +218,7 @@ export default {
     align-items: center;
     margin: 5px 0;
 }
+
 .orDividerLines {
     border-bottom: 1px solid white;
     flex: 1;
