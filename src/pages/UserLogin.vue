@@ -15,6 +15,12 @@
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
+                        E-mail*
+                    </div>
+                    <input class="inputField" style="flex: 1"/>
+                </div>
+                <div class="inputGroup">
+                    <div class="prependLabel">
                         First Name*
                     </div>
                     <input class="inputField" style="flex: 1"/>
@@ -35,24 +41,25 @@
                     <div class="prependLabel">
                         Password*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" style="flex: 1" type="password"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         Repeat Password*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" style="flex: 1" type="password"/>
                 </div>
             </div>
             <div style="padding: 10px; display: flex; justify-content: end; background-color: black">
-                <button class="inputField" @click="createAccountModal.bool = false">
+                <button class="inputField" @click="submitCreateAccount()">
                     Submit
                 </button>
             </div>
         </div>
 
         <div class="blackBox">
-            <div class="productName">Dark Pattern Chat</div>
+            <img src="../../public/output-onlinegiftools.gif" alt="Loading" contain style="height: 100px"/>
+            <div style="font-weight: bold; color: #6c6c6c; margin-bottom: 10px">678 Users online now!</div>
         </div>
         <div class="blackBox">
             <div class="loginFields">
@@ -60,22 +67,20 @@
                     <div class="prependLabel">
                         <fai icon="fa-solid fa-user"/>
                     </div>
-                    <input class="inputField"/>
+                    <input class="inputField" v-model="username"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         <fai icon="fa-solid fa-lock"/>
                     </div>
-                    <input class="inputField" type="password"/>
+                    <input class="inputField" v-model="password" type="password"/>
                 </div>
                 <div class="loginButtons">
                     <div class="forgotPasswordText">
                         forgot password?
                     </div>
-                    <button class="inputField">
-                        <router-link class="loginButton" to="/room">
-                            Login
-                        </router-link>
+                    <button class="inputField" @click="login()">
+                        Login
                     </button>
                 </div>
                 <div class="orDivider">
@@ -92,33 +97,47 @@
 </template>
 
 <script>
-import {RouterLink} from 'vue-router';
 
 export default {
     name: "UserLogin",
-    components: {
-        RouterLink
-    },
     data() {
         return {
+            password: "",
+            username: "",
             createAccountModal: {
                 bool: false,
                 data: null,
                 template: {
                     username: null,
+                    email: null,
                     firstName: null,
                     middleName: null,
                     lastname: null,
                     password: null,
                 },
-                confirmPassword: ""
+                confirmPassword: "",
             }
         }
     },
+    created() {
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                this.login();
+            }
+        });
+    },
     methods: {
+        login() {
+            if (this.username === "SauceTV" && this.password === "password") {
+                this.$router.push('UserTable')
+            }
+        },
         openCreateAccountModal() {
-            this.createAccountModal.data = Object.assign({}, this.createAccountModal.template);
+            this.createAccountModal.data = JSON.parse(JSON.stringify(this.createAccountModal.template));
             this.createAccountModal.bool = true;
+        },
+        submitCreateAccount() {
+            this.createAccountModal.bool = false;
         }
     }
 }
@@ -126,8 +145,8 @@ export default {
 
 <style scoped>
 .createAccountModal {
-    width: 300px;
     position: absolute;
+    width: 300px;
     background-color: #151515;
     z-index: 1;
     display: flex;
@@ -135,6 +154,7 @@ export default {
 }
 
 .centerLogin {
+    pointer-events: none;
     height: 100%;
     width: 100%;
     display: flex;
@@ -151,21 +171,13 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #151515;
+    background-color: #000000;
     padding: 0 10px;
     border: black solid 3px;
 }
 
-.productName {
-    display: flex;
-    align-items: center;
-    font-stretch: expanded;
-    height: 100px;
-    font-size: 50px;
-    font-weight: 900;
-}
-
 .loginFields {
+    pointer-events: all;
     display: flex;
     flex-direction: column;
     align-items: center;
