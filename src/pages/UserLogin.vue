@@ -11,43 +11,37 @@
                     <div class="prependLabel">
                         Username*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" v-model="createAccountModal.data.userName" style="flex: 1"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         E-mail*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" v-model="createAccountModal.data.email" style="flex: 1"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         First Name*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" v-model="createAccountModal.data.firstName" style="flex: 1"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         Middle Name
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" v-model="createAccountModal.data.middleName" style="flex: 1"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         Last Name*
                     </div>
-                    <input class="inputField" style="flex: 1"/>
+                    <input class="inputField" v-model="createAccountModal.data.lastName" style="flex: 1"/>
                 </div>
                 <div class="inputGroup">
                     <div class="prependLabel">
                         Password*
                     </div>
-                    <input class="inputField" style="flex: 1" type="password"/>
-                </div>
-                <div class="inputGroup">
-                    <div class="prependLabel">
-                        Repeat Password*
-                    </div>
-                    <input class="inputField" style="flex: 1" type="password"/>
+                    <input class="inputField" v-model="createAccountModal.data.password" style="flex: 1" type="password"/>
                 </div>
             </div>
             <div style="padding: 10px; display: flex; justify-content: end; background-color: black">
@@ -55,6 +49,7 @@
                     Submit
                 </button>
             </div>
+            {{createAccountModal.data}}
         </div>
 
         <div class="blackBox">
@@ -97,6 +92,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
     name: "UserLogin",
@@ -108,14 +104,13 @@ export default {
                 bool: false,
                 data: null,
                 template: {
-                    username: null,
+                    userName: null,
                     email: null,
                     firstName: null,
                     middleName: null,
-                    lastname: null,
+                    lastName: null,
                     password: null,
                 },
-                confirmPassword: "",
             }
         }
     },
@@ -125,10 +120,13 @@ export default {
                 this.login();
             }
         });
+        axios.get('http://localhost:3000/users').then(response => {
+            console.log(response.data);
+        })
     },
     methods: {
         login() {
-            if (this.username === "SauceTV" && this.password === "password") {
+            if (this.username && this.password) {
                 this.$router.push('UserTable')
             }
         },
@@ -138,6 +136,10 @@ export default {
         },
         submitCreateAccount() {
             this.createAccountModal.bool = false;
+            console.log({...this.createAccountModal.data})
+            axios.post('http://localhost:3000/users', {...this.createAccountModal.data}).then(response => {
+                console.log(response.data);
+            })
         }
     }
 }
@@ -145,6 +147,7 @@ export default {
 
 <style scoped>
 .createAccountModal {
+    pointer-events: all;
     position: absolute;
     width: 300px;
     background-color: #151515;
